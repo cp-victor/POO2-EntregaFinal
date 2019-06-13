@@ -1,0 +1,148 @@
+<ui:composition template="template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    >
+        <ui:define name="title">
+		<h:outputText value="Cadastro produtos" />
+	</ui:define>
+    
+    <ui:define name="principal">
+        <h1>Cadastro produto</h1>        
+        
+        <h:form id="formProd">
+            <p:panelGrid columns="2">
+                <p:outputLabel for="radiobut" value="Tipo:" />
+                <p:selectOneRadio id="radiobut" value="#{ProdutoMB.radio}">
+                    <f:selectItem itemLabel="Interno" itemValue="1"/>
+                    <f:selectItem itemLabel="Externo" itemValue="2"/>
+                    <p:ajax update="formProd produtos"/>
+                </p:selectOneRadio>
+                <p:outputLabel value="Nome:" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:inputText value="#{ProdutoMB.prode.nome}" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:outputLabel value="Categorias:" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:selectOneMenu value="#{ProdutoMB.categoriaEscolhida}" converter="converterCategoria" style="width:100%" rendered="#{!ProdutoMB.rendered()}">
+                    <f:selectItems value="#{ProdutoMB.categorias}" var="aux"
+                                   itemValue="#{aux}" itemLabel="#{aux.descricao}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Preco:" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:inputText value="#{ProdutoMB.prode.preco}" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:outputLabel value="Moeda:" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:inputText value="#{ProdutoMB.prode.moeda}" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:outputLabel value="Imposto:" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:inputText value="#{ProdutoMB.prode.imposto}" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:outputLabel value="Destino:" rendered="#{!ProdutoMB.rendered()}"/>
+                <p:inputText value="#{ProdutoMB.prode.destino}" rendered="#{!ProdutoMB.rendered()}"/>
+                
+                <p:outputLabel value="Nome:" rendered="#{ProdutoMB.rendered()}"/>
+                <p:inputText value="#{ProdutoMB.prodi.nome}" rendered="#{ProdutoMB.rendered()}"/>
+                <p:outputLabel value="Categorias:" rendered="#{ProdutoMB.rendered()}"/>
+                <p:selectOneMenu value="#{ProdutoMB.categoriaEscolhida}" converter="converterCategoria" style="width:100%" rendered="#{ProdutoMB.rendered()}">
+                    <f:selectItems value="#{ProdutoMB.categorias}" var="aux"
+                                   itemValue="#{aux}" itemLabel="#{aux.descricao}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Preco:" rendered="#{ProdutoMB.rendered()}"/>
+                <p:inputText value="#{ProdutoMB.prodi.preco}" rendered="#{ProdutoMB.rendered()}"/>
+                <p:outputLabel value="Moeda:" rendered="#{ProdutoMB.rendered()}"/>
+                <p:inputText value="#{ProdutoMB.prodi.moeda}" rendered="#{ProdutoMB.rendered()}"/>
+                <p:outputLabel value="Imposto:" rendered="#{ProdutoMB.rendered()}"/>
+                <p:inputText value="#{ProdutoMB.prodi.imposto}" rendered="#{ProdutoMB.rendered()}"/>
+                <p:outputLabel value="Incentivo:" rendered="#{ProdutoMB.rendered()}"/>
+                <p:selectBooleanCheckbox value="#{ProdutoMB.prodi.incentivo}" rendered="#{ProdutoMB.rendered()}"/>
+                
+            </p:panelGrid>
+            
+            <p:outputLabel value="#{ProdutoMB.errorMsg}" rendered="#{!ProdutoMB.camposValidos}"/>
+            <br>
+                
+                
+                
+            </br> 
+           
+            <p:commandButton value="Salvar"
+                             action="#{ProdutoMB.salvar()}"
+                             update="formProd"
+                             />
+            
+            <p:growl id="msgs" showDetail="true"/>
+            <p:dataTable id="produtos"
+                         var="p" value="#{ProdutoMB.produtos}"
+                         rowKey="#{p.codigo}"
+                         rows="5"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15"
+                         editable="true"
+                         >
+                
+                
+                <p:ajax event="rowEdit" listener="#{ProdutoMB.onRowEdit}" update=":formProd:msgs" />
+                <p:ajax event="rowEditCancel" listener="#{ProdutoMB.onRowCancel}" update=":formProd:msgs" />
+                
+                <p:column filterBy="#{p.codigo}" headerText = "Codigo" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{p.codigo}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{p.codigo}" style="width:100%" label="codigo"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{p.nome}" headerText = "Nome" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{p.nome}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{p.nome}" style="width:100%" label="nome"/></f:facet>                        
+                    </p:cellEditor>         
+                </p:column>
+                <p:column filterBy="#{p.categoria}" headerText = "Categoria" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{p.categoria.descricao}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{p.categoria}" style="width:100%" label="categoria"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{p.preco}" headerText = "Preco" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{p.preco}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{p.preco}" style="width:100%" label="preco"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{p.moeda}" headerText = "Moeda" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{p.moeda}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{p.moeda}" style="width:100%" label="moeda"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{p.imposto}" headerText = "Imposto" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{p.imposto}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{p.imposto}" style="width:100%" label="imposto"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{p.destino}" headerText = "Destino" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{ProdutoMB.buscaDestino(p)}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{c.destino}" style="width:100%" label="destino"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{p.incentivo}" headerText = "Incentivo" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{ProdutoMB.buscaIncentivo(p)}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{p.incentivo}" style="width:100%" label="incentivo"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column style="width:32px">
+                    <p:rowEditor/>
+                </p:column>
+                
+                <p:column style="width: 32px">
+                    <p:commandButton icon="ui-icon-trash"
+                        title="Delete this row"
+                        actionListener="#{ProdutoMB.remove(p)}"
+                        ajax="false" 
+                        update="formCat"
+                        />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

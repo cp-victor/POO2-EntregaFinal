@@ -1,0 +1,55 @@
+<ui:composition template="template.xhtml"
+               xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                
+        <ui:define name="title">
+		<h:outputText value="Pedido Sucesso" />
+	</ui:define>
+    
+        <ui:define name="principal">
+        <h1>Pedidos</h1>
+        
+        <h:form id="formPedok">
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Cliente"/>
+                <p:outputLabel value="#{PedidokMB.clienteNome}"/>
+            </p:panelGrid>
+           
+            <p:commandButton value="Voltar"
+                             action="index.xhtml"
+                             />
+            
+            <p:growl id="msgs" showDetail="true"/>
+            <p:dataTable id="pedidos"
+                         var="p" value="#{PedidokMB.clientePedidos}"
+                         rowKey="#{p.numero}"
+                         rows="5"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15"
+                         editable="true"
+                         sortBy="#{p.numero}"
+                         >
+                
+                <p:column filterBy="#{p.numero}" headerText="Numero" filterMatchMode="contains">
+                    <p:outputLabel value="#{p.numero}"/>
+                </p:column>
+                <p:column filterBy="#{p.data}" headerText="Data" filterMatchMode="contains">
+                    <p:outputLabel value="#{p.data}"/>
+                </p:column>
+                <!--<p:column headerText="Valor Total">
+                    <p:outputLabel value="#{p.totalPedido()}"/>
+                </p:column>-->
+                <p:column headerText="Ver Itens">
+                    <p:commandButton value="Ver"
+                                     action="#{PedidokMB.ver(p.numero)}"
+                                     />
+                </p:column>
+            </p:dataTable>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

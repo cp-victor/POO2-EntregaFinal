@@ -1,0 +1,74 @@
+<ui:composition template="template.xhtml"
+               xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                
+        <ui:define name="title">
+		<h:outputText value="Cadastro Categoria" />
+	</ui:define>
+    
+        <ui:define name="principal">
+        <h1>Cadastro Categoria</h1>
+        
+        
+        <h:form id="formCat">
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Descricao"/>
+                <p:inputText value="#{CategoriaMB.cat.descricao}"/>
+            </p:panelGrid>
+            
+            <p:outputLabel value="Descrição não pode ser vazia!" 
+                           rendered="#{CategoriaMB.vazia}"/>
+            <p:outputLabel value="Ja existe uma categoria com esse nome!" 
+                           rendered="#{CategoriaMB.existe}"/>
+            <br>
+                
+                
+                
+            </br>     
+           
+            <p:commandButton value="Salvar"
+                             action="#{CategoriaMB.salvar()}"
+                             update="formCat"
+                             />
+            
+            <p:growl id="msgs" showDetail="true"/>
+            <p:dataTable id="clientes"
+                         var="c" value="#{CategoriaMB.categorias}"
+                         rowKey="#{c.codigo}"
+                         rows="5"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15"
+                         editable="true"
+                         >
+                
+                
+                <p:ajax event="rowEdit" listener="#{CategoriaMB.onRowEdit}" update=":formCat:msgs" />
+                <p:ajax event="rowEditCancel" listener="#{CategoriaMB.onRowCancel}" update=":formCat:msgs" />
+                
+                <p:column filterBy="#{c.descricao}" headerText = "Descricao" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{c.descricao}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{c.descricao}" style="width:100%" label="descricao"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                
+                <p:column style="width:32px">
+                    <p:rowEditor/>
+                </p:column>
+                <p:column style="width: 32px">
+                    <p:commandButton icon="ui-icon-trash"
+                        title="Delete this row"
+                        actionListener="#{CategoriaMB.remove(c)}"
+                        ajax="false" 
+                        update="formCat"
+                        />
+                </p:column>
+            </p:dataTable>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

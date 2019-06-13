@@ -1,0 +1,29 @@
+<ui:composition template="template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    >
+        <ui:define name="title">
+		<h:outputText value="Selecao de cliente" />
+	</ui:define>
+    <ui:define name="principal">
+        <h1>Selecao de Cliente</h1>
+        
+        <h:form id="formCli">
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Codigo"/>
+                <p:inputText value="#{PedidokMB.pkCli}"/>
+            </p:panelGrid>
+            <p:outputLabel value="#{PedidokMB.errorMsg}" rendered="#{!PedidokMB.b}"/>
+            <br>
+                
+            </br>
+            <p:commandButton value="Mostrar Pedidos"
+                             action="#{PedidokMB.verificaCli()}"
+                             update="formCli"
+                             />   
+        </h:form>
+    </ui:define>
+</ui:composition>

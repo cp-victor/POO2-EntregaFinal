@@ -1,0 +1,111 @@
+<ui:composition template="template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    >
+        <ui:define name="title">
+		<h:outputText value="Cadastro Clientes" />
+	</ui:define>
+    <ui:define name="principal">
+        <h1>Cadastro Cliente</h1>
+        
+        
+        <h:form id="formCli">
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Nome:"/>
+                <p:inputText value="#{ClienteMB.cli.nome}"/>
+                <p:outputLabel value="Endereco:"/>
+                <p:inputText value="#{ClienteMB.cli.endereco}"/>
+                <p:outputLabel value="Telefone:"/>
+                <p:inputText value="#{ClienteMB.cli.telefone}"/>
+                <p:outputLabel for="radiobut" value="Status:" />
+                <p:selectOneRadio id="radiobut" value="#{ClienteMB.radioStat}">
+                    <f:selectItem itemLabel="Liberado"  itemValue="1"/>
+                    <f:selectItem itemLabel="Bloqueado" itemValue="2"/>
+                </p:selectOneRadio>
+                <p:outputLabel value="Limite:"/>
+                <p:inputText value="#{ClienteMB.cli.limite}"/>
+            </p:panelGrid>
+            <p:outputLabel value="Complete todos os campos!" 
+                           rendered="#{!ClienteMB.camposValidos}"/>
+            <br>
+                
+                
+                
+            </br> 
+           
+            <p:commandButton value="Salvar"
+                             action="#{ClienteMB.salvar}"
+                             update="formCli"
+                             />
+            
+            <p:growl id="msgs" showDetail="true"/>
+            <p:dataTable id="clientes"
+                         var="c" value="#{ClienteMB.clientes}"
+                         rowKey="#{c.codigo}"
+                         rows="2"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="2,5,10"
+                         editable="true"
+                         >
+                
+                
+                <p:ajax event="rowEdit" listener="#{ClienteMB.onRowEdit}" update=":formCli:msgs" />
+                <p:ajax event="rowEditCancel" listener="#{ClienteMB.onRowCancel}" update=":formCli:msgs" />
+                
+                <p:column filterBy="#{c.codigo}" headerText = "Matricula" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{c.codigo}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{c.codigo}" style="width:100%" label="matricula"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{c.nome}" headerText = "Nome" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{c.nome}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{c.nome}" style="width:100%" label="nome"/></f:facet>                        
+                    </p:cellEditor>         
+                </p:column>
+                <p:column filterBy="#{c.endereco}" headerText = "Endereco" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{c.endereco}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{c.endereco}" style="width:100%" label="endereco"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{c.telefone}" headerText = "Telefone" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{c.telefone}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{c.telefone}" style="width:100%" label="telefone"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{c.auxStat}" headerText = "Status" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{ClienteMB.statusCliente(c)}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{c.status}" style="width:100%" label="status"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column filterBy="#{c.limite}" headerText = "Limite" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><p:outputLabel value="#{c.limite}"/></f:facet>
+                        <f:facet name="input"><p:inputText value="#{c.limite}" style="width:100%" label="limite"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                
+                <p:column style="width:32px">
+                    <p:rowEditor/>
+                </p:column>
+                <p:column style="width: 32px">
+                    <p:commandButton icon="ui-icon-trash"
+                        title="Delete this row"
+                        actionListener="#{ClienteMB.remove(c)}"
+                        ajax="false" 
+                        update="formCat"
+                        />
+                </p:column>
+            </p:dataTable>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>
